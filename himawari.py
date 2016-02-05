@@ -15,11 +15,13 @@ def main():
     width = 550
     outfile = ''
     format = ''
+    retries = 100
 
     parser = argparse.ArgumentParser()
     parser.add_argument("-l", "--lod", choices=[4,8,16,20], help="Set level of detail for image. Valid values: 4, 8, 16, 20", type=int)
     parser.add_argument("-f", "--format", choices=["png","jpg","bmp","tiff","pcx","ppm","im","eps","gif","spi","webp"], help="Output format.")
     parser.add_argument("-o", "--out", help="Name of output file.")
+    parser.add_argument("-r", "--retries", help="Number of retrys for http failures", type=int)
 
     args = parser.parse_args()
     if args.lod is not None:
@@ -28,20 +30,32 @@ def main():
         outfile = args.out
     if args.format is not None:
         format = args.format
+    if args.retries is not None:
+        retries = args.retries
 
     req=Request("http://himawari8-dl.nict.go.jp/himawari8/img/D531106/latest.json")
+    
+    attempts = 0
+    fail = 0
 
-    try:
-        latest_json = urlopen(req)
-    except URLError as e:
-        if hasattr(e, 'reason'):
-            print("Failed to reach server.")
-            print("Reason: ", e.reason)
-            exit()
-        elif hasattr(e, 'code'):
-            print("Request failed")
-            print("Error Code: ", e.code)
-            exit()
+    while attempts < retries:
+        try:
+            latest_json = urlopen(req)
+            fail = 0
+            break
+        except URLError as e:
+            if hasattr(e, 'reason'):
+                print("Failed to reach server.")
+                print("Reason: ", e.reason)
+            elif hasattr(e, 'code'):
+                print("Request failed")
+                print("Error Code: ", e.code)
+            retries += 1
+            fail = 1
+
+    if fail != 0:
+        print("Failed to recieve response after {} attempts. Aborting.".format(attempts))
+        exit()
 
     latest = strptime(loads(latest_json.read().decode("utf-8"))["date"], "%Y-%m-%d %H:%M:%S")
 
@@ -56,13 +70,15 @@ def main():
     for x in range(level):
         for y in range(level):
             attempts = 0
+            fail = 0
 
             url = url_format.format(level,width,strftime("%Y/%m/%d/%H%M%S",latest), x, y)
 
-            while attempts < 10:
+            while attempts < retries:
                 req = Request(url)
                 try:
                     tile_r = urlopen(req)
+                    fail = 0
                     break
                 except URLError as e:
                     if hasattr(e, 'reason'):
@@ -72,6 +88,11 @@ def main():
                         print("Request failed")
                         print("Error Code: ", e.code)
                     attempts+=1
+                    fail = 1
+
+            if fail != 0:
+                print("Failed to recieve response after {} attempts. Aborting.".format(attempts))
+                exit()
 
             tileData = tile_r.read()
             tile = Image.open(BytesIO(tileData))
@@ -128,7 +149,7 @@ def main():
         img.save(outfile, "SPIDER")
     elif outfile[-5:] == ".webp":
         img.save(outfile, "WEBP")
-    else:        
+    else:
         img.save(outfile + ".png", "PNG")
 
 if __name__ == "__main__":
