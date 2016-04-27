@@ -5,7 +5,7 @@
 		<key>Label</key>
 		<string>com.himawariBackground</string>
 		<key>Program</key>
-		<string>/opt/scripts/himawari/updateBacgroundMac.sh</string>
+		<string>/opt/scripts/himawari/updateBackgroundMac.sh</string>
 		<key>EnvironmentVariables</key>
 		<dict>
 			<key>PATH</key>
