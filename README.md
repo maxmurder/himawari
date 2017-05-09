@@ -1,6 +1,6 @@
 # himawari
 
-Simple python script for getting the latest himawari sattilite images.
+Simple python script for getting the latest himawari satellite images.
 
 Also contains scripts to update the desktop background to the latest image.
 
