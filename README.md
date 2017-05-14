@@ -2,7 +2,7 @@
 
 Simple python script for getting the latest himawari satellite images.
 
-Also contains scripts to update the desktop background to the latest image.
+Also contains scripts to update the desktop background to the latest image using feh.
 
 Usage:
 python3 himawari.py [-l --lod {4, 8, 16, 20}] [-f --format {png,jpg,bmp,tiff,pcx,ppm,im,eps,gif,spi,webp}] [-o --output <output.png>] [-r --retires <int>]
@@ -18,12 +18,13 @@ python3 himawari.py [-l --lod {4, 8, 16, 20}] [-f --format {png,jpg,bmp,tiff,pcx
 
 Background Automation:
   GNOME:
-  1. Install scripts:
-    `sudo mkdir /opt/scripts/himawari`
-    `sudo cp himawari.py /opt/scripts/himawari/ && sudo cp setBackground.sh /opt/scripts/himawari/`
-    `sudo chmod 755 /opt/scripts/himawari/setBackground.sh`
-  2. Create cron job to run the script every 10 miniutes:
-    `*/10 * * * * /opt/scripts/himawari/setBackground.sh`
+  1. Install feh:
+    `sudo apt-get install feh`
+  2. Install scripts:
+    `sudo cp himawari.py /usr/local/bin/ && sudo cp setBackground.sh /usr/local/bin/`
+    `sudo chmod 755 /usr/local/bin/setBackground.sh`
+  3. Create cron job to run the script every 10 miniutes:
+    `*/10 * * * * /usr/local/bin/himawari/setBackground.sh`
 
   MacOS:
   1. Install scripts:

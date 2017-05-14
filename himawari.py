@@ -99,7 +99,7 @@ def main():
             img.paste(tile, (width * x, height * y, width * (x + 1), height * (y + 1)))
             print ("Downloading: {}/{}".format(x * level + y + 1, level * level), end="\r")
 
-    print("\nFinished\n")
+    print("\nSaving...")
 
     if outfile == '':
         if format == "png":
@@ -151,6 +151,9 @@ def main():
         img.save(outfile, "WEBP")
     else:
         img.save(outfile + ".png", "PNG")
+   
+    print("Done!")
+    exit(0)
 
 if __name__ == "__main__":
     main()
