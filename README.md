@@ -1,8 +1,8 @@
 # himawari
 
-Simple python script for getting the latest himawari satellite images.
+Simple python script for getting the latest <a href="http://himawari8.nict.go.jp">Himawari 8</a> satellite images.
 
-Also contains scripts to update the desktop background to the latest image using feh.
+Also contains scripts to automate updating the desktop background using <a href="https://feh.finalrewind.org/">feh</a> image viewer.
 
 Usage:
 python3 himawari.py [-l --lod {4, 8, 16, 20}] [-f --format {png,jpg,bmp,tiff,pcx,ppm,im,eps,gif,spi,webp}] [-o --output <output.png>] [-r --retires <int>]
