@@ -17,6 +17,7 @@ def main():
     format = ''
     retries = 100
 
+    # parse arguments 
     parser = argparse.ArgumentParser()
     parser.add_argument("-l", "--lod", choices=[4,8,16,20], help="Set level of detail for image. Valid values: 4, 8, 16, 20", type=int)
     parser.add_argument("-f", "--format", choices=["png","jpg","bmp","tiff","pcx","ppm","im","eps","gif","spi","webp"], help="Output format.")
@@ -33,11 +34,10 @@ def main():
     if args.retries is not None:
         retries = args.retries
 
+    # download the latest himawari images from web api
     req=Request("http://himawari8-dl.nict.go.jp/himawari8/img/D531106/latest.json")
-    
     attempts = 0
     fail = 0
-
     while attempts < retries:
         try:
             latest_json = urlopen(req)
@@ -62,11 +62,12 @@ def main():
     print("Latest: {} GMT\n".format(strftime("%Y/%m/%d/%H:%M:%S",latest)))
 
     url_format = "http://himawari8.nict.go.jp/img/D531106/{}d/{}/{}_{}_{}.png"
-
+    # set up the image
     img = Image.new('RGB',(width*level, height*level))
 
     print("Downloading: 0/{}".format(level*level), end="\r")
 
+    #download the images
     for x in range(level):
         for y in range(level):
             attempts = 0
@@ -93,12 +94,13 @@ def main():
             if fail != 0:
                 print("Failed to recieve response after {} attempts. Aborting.".format(attempts))
                 exit()
-
+            # write data to image 
             tileData = tile_r.read()
             tile = Image.open(BytesIO(tileData))
             img.paste(tile, (width * x, height * y, width * (x + 1), height * (y + 1)))
             print ("Downloading: {}/{}".format(x * level + y + 1, level * level), end="\r")
-
+    
+    #save images to file
     print("\nSaving...")
 
     if outfile == '':
