@@ -4,7 +4,7 @@ Simple python script for getting the latest <a href="http://himawari8.nict.go.jp
 
 Also contains scripts to automate updating the desktop background using <a href="https://feh.finalrewind.org/">feh</a> image viewer.
 
-Usage:
+### Usage:
 python3 himawari.py [-l --lod {4, 8, 16, 20}] [-f --format {png,jpg,bmp,tiff,pcx,ppm,im,eps,gif,spi,webp}] [-o --output <output.png>] [-r --retires <int>]
 
 -l --lod {4,8,16,20}      Image level of detail.
@@ -16,14 +16,15 @@ python3 himawari.py [-l --lod {4, 8, 16, 20}] [-f --format {png,jpg,bmp,tiff,pcx
 -r --retires      Number of times to retry connections before aborting. 
 
 
-Background Automation:
-  GNOME:
+### Background Automation:
+  ##### GNOME:
   1. Install scripts:
     `sudo cp himawari.py /usr/local/bin/ && sudo cp setBackground.sh /usr/local/bin/`
     `sudo chmod 755 /usr/local/bin/setBackground.sh`
   2. Create cron job to run the script:
     `*/10 * * * * /usr/local/bin/himawari/setBackground.sh`
-  feh:
+
+ ##### feh:
   1. Install feh:
     `sudo apt-get install feh`
   2. Install scripts:
@@ -32,7 +33,7 @@ Background Automation:
   3. Create cron job to run the script every:
     `*/10 * * * * /usr/local/bin/himawari/setBackground.sh`
 
-  MacOS:
+ ##### MacOS:
   1. Install scripts:
     `sudo mkdir /opt/scripts/himawari`
     `sudo cp himawari.py /opt/scripts/himawari/ && sudo cp mac/updateBackgroundMac.sh /opt/scripts/himawari/ && sudo cp mac/setDesktops.applescript /opt/scripts/himawari/`
