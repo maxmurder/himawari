@@ -18,12 +18,18 @@ python3 himawari.py [-l --lod {4, 8, 16, 20}] [-f --format {png,jpg,bmp,tiff,pcx
 
 Background Automation:
   GNOME:
+  1. Install scripts:
+    `sudo cp himawari.py /usr/local/bin/ && sudo cp setBackground.sh /usr/local/bin/`
+    `sudo chmod 755 /usr/local/bin/setBackground.sh`
+  2. Create cron job to run the script:
+    `*/10 * * * * /usr/local/bin/himawari/setBackground.sh`
+  feh:
   1. Install feh:
     `sudo apt-get install feh`
   2. Install scripts:
     `sudo cp himawari.py /usr/local/bin/ && sudo cp setBackground.sh /usr/local/bin/`
-    `sudo chmod 755 /usr/local/bin/setBackground.sh`
-  3. Create cron job to run the script every 10 miniutes:
+    `sudo chmod 755 /usr/local/bin/setBackgroundFeh.sh`
+  3. Create cron job to run the script every:
     `*/10 * * * * /usr/local/bin/himawari/setBackground.sh`
 
   MacOS:
