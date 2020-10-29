@@ -15,7 +15,7 @@ def main():
     width = 550
     outfile = ''
     format = ''
-    retries = 100
+    retries = 10
 
     # parse arguments 
     parser = argparse.ArgumentParser()
@@ -35,7 +35,7 @@ def main():
         retries = args.retries
 
     # download the latest himawari images from web api
-    req=Request("http://himawari8-dl.nict.go.jp/himawari8/img/D531106/latest.json")
+    req=Request("https://himawari8-dl.nict.go.jp/himawari8/img/D531106/latest.json")
     attempts = 0
     fail = 0
     while attempts < retries:
@@ -50,7 +50,7 @@ def main():
             elif hasattr(e, 'code'):
                 print("Request failed")
                 print("Error Code: ", e.code)
-            retries += 1
+            attempts += 1
             fail = 1
 
     if fail != 0:
@@ -61,7 +61,7 @@ def main():
 
     print("Latest: {} GMT\n".format(strftime("%Y/%m/%d/%H:%M:%S",latest)))
 
-    url_format = "http://himawari8.nict.go.jp/img/D531106/{}d/{}/{}_{}_{}.png"
+    url_format = "https://himawari8.nict.go.jp/img/D531106/{}d/{}/{}_{}_{}.png"
     # set up the image
     img = Image.new('RGB',(width*level, height*level))
 
