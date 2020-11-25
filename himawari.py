@@ -7,6 +7,7 @@ from PIL import Image
 from urllib.request import Request, urlopen
 from urllib.error import URLError
 import argparse
+from sys import exit
 
 def main():
 
