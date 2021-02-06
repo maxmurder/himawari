@@ -1,2 +1,4 @@
 *.png
 .vs/*
+.idea
+__pycache__/*
