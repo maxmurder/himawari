@@ -32,6 +32,7 @@ def get_latest_url(sat='goes-17',sector='full_disk', product='geocolor'):
         return f'{COLO_BASE_URL}imagery/{strftime("%Y%m%d", latest_datetime)}/{sat}---{sector}/{product}/{latest_timestamp}/', latest_datetime
     except URLError as err:
         logging.error(f'Request failed: {err.code} {err.reason}')
+        return None, None
 
 
 def get_image_url(zoom=0, tile_x=0, tile_y=0, latest_url=None):
@@ -68,6 +69,16 @@ def download_image(url):
 
 
 def download_latest_image(sat='goes-17', sector='full_disk', product='geocolor', zoom=0, output_dir=None, filename=None):
+    """
+    Download latest images from https://rammb-slider.cira.colostate.edu/ api and stitch them together into a single output.
+    :param sat: satellite to use for download.
+    :param sector: sector to download.
+    :param product: product to download.
+    :param zoom: zoom level 0-4
+    :param output_dir: output directory for image.
+    :param filename: output filename for image.
+    :return:
+    """
     zoom = min(4, zoom)
     tiles, latest_datetime = get_latest_image_urls(sat=sat, sector=sector, product=product, zoom=zoom)
     image_width = TILE_WIDTH * ZOOM_TILES[zoom]
