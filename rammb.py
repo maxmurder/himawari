@@ -6,10 +6,12 @@ from urllib.request import Request, urlopen
 from urllib.error import URLError
 from PIL import Image
 from io import BytesIO
+import argparse
+from pathlib import Path
 
 logging.getLogger().setLevel(logging.INFO)
 
-COLO_BASE_URL = 'https://rammb-slider.cira.colostate.edu/data/'
+RAMMB_BASE_URL = 'https://rammb-slider.cira.colostate.edu/data/'
 TILE_WIDTH = 678
 ZOOM_TILES = [1, 2, 4, 8, 16]
 
@@ -21,7 +23,7 @@ def get_latest_url(sat='goes-17',sector='full_disk', product='geocolor'):
     :param product:
     :return:
     """
-    timestamps_url = f'{COLO_BASE_URL}json/{sat}/{sector}/{product}/latest_times.json'
+    timestamps_url = f'{RAMMB_BASE_URL}json/{sat}/{sector}/{product}/latest_times.json'
     request = Request(timestamps_url)
     try:
         result = urlopen(request)
@@ -29,7 +31,7 @@ def get_latest_url(sat='goes-17',sector='full_disk', product='geocolor'):
         latest_timestamp = latest_times.get('timestamps_int')[0]
         latest_datetime = strptime(str(latest_timestamp), '%Y%m%d%H%M%S')
         logging.info(f'Latest {strftime("%Y/%m/%d %H:%M:%S", latest_datetime)}')
-        return f'{COLO_BASE_URL}imagery/{strftime("%Y%m%d", latest_datetime)}/{sat}---{sector}/{product}/{latest_timestamp}/', latest_datetime
+        return f'{RAMMB_BASE_URL}imagery/{strftime("%Y%m%d", latest_datetime)}/{sat}---{sector}/{product}/{latest_timestamp}/', latest_datetime
     except URLError as err:
         logging.error(f'Request failed: {err.code} {err.reason}')
         return None, None
@@ -101,9 +103,29 @@ def download_latest_image(sat='goes-17', sector='full_disk', product='geocolor',
         filename = strftime(f'{sat}_{sector}_{product}_%Y-%m-%d-%H%M%S.png', latest_datetime)
     if not output_dir:
         output_dir = os.getcwd()
+    Path(output_dir).mkdir(parents=True, exist_ok=True)
     out_path = os.path.join(output_dir, filename)
     logging.info(f'Saving: {out_path}')
     image.save(out_path, 'PNG')
 
 
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-s', '--sat',
+                        choices=['goes-16', 'goes-17', 'himawari', 'meteosat-8', 'meteosat-11', 'jpss'],
+                        help='Satellite to get data for.',
+                        type=str,
+                        default='goes-16')
+    parser.add_argument('-c', '--sector', help='Image sector to retrieve.', type=str, default='full_disk')
+    parser.add_argument('-p', '--product', help='Image product to retrieve.', type=str, default='geocolor')
+    parser.add_argument('-z', '--zoom', help='Zoom level to use. 0-4', type=int, default=0)
+    parser.add_argument('-d', '--directory', help='Output directory for image.', type=str, default=None)
+    parser.add_argument('-f', '--filename', help='Filename for output', type=str, default=None)
+    args = parser.parse_args()
 
+    download_latest_image(sat=args.sat,
+                          sector=args.sector,
+                          product=args.product,
+                          zoom=args.zoom,
+                          output_dir=args.directory,
+                          filename=args.filename)
