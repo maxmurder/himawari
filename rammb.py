@@ -3,7 +3,7 @@ import logging
 import json
 from time import strptime, strftime
 from urllib.request import Request, urlopen
-from urllib.error import URLError
+from urllib.error import URLError, HTTPError
 from PIL import Image
 from io import BytesIO
 import argparse
@@ -16,7 +16,7 @@ TILE_WIDTH = 678
 ZOOM_TILES = [1, 2, 4, 8, 16]
 
 
-def get_latest_url(sat='goes-17',sector='full_disk', product='geocolor'):
+def get_latest_url(sat='goes-17', sector='full_disk', product='geocolor'):
     """
     Get latest image url
     :param sat: which satellite to get images from (goes-16, goes-17, himawari, jpss)
@@ -27,14 +27,17 @@ def get_latest_url(sat='goes-17',sector='full_disk', product='geocolor'):
     request = Request(timestamps_url)
     try:
         result = urlopen(request)
+    except URLError as err:
+        logging.error(f'Request failed: {err.reason}')
+        return None, None
+    except HTTPError as err:
+        logging.error(f'Request Failed: {err.code}')
+    else:
         latest_times = json.loads(result.read().decode('utf-8'))
         latest_timestamp = latest_times.get('timestamps_int')[0]
         latest_datetime = strptime(str(latest_timestamp), '%Y%m%d%H%M%S')
         logging.info(f'Latest {strftime("%Y/%m/%d %H:%M:%S", latest_datetime)}')
         return f'{RAMMB_BASE_URL}imagery/{strftime("%Y%m%d", latest_datetime)}/{sat}---{sector}/{product}/{latest_timestamp}/', latest_datetime
-    except URLError as err:
-        logging.error(f'Request failed: {err.code} {err.reason}')
-        return None, None
 
 
 def get_image_url(zoom=0, tile_x=0, tile_y=0, latest_url=None):
@@ -47,7 +50,7 @@ def get_image_url(zoom=0, tile_x=0, tile_y=0, latest_url=None):
     :return:
     """
     if not latest_url:
-        latest_url = get_latest_url()
+        latest_url = get_latest_url()[0]
     return f'{latest_url}{zoom:02}/{tile_y:03}_{tile_x:03}.png'
 
 
@@ -65,9 +68,12 @@ def download_image(url):
     request = Request(url)
     try:
         result = urlopen(request)
-        return result.read()
     except URLError as err:
-        logging.error(f'Request failed: {err.code} {err.reason}')
+        logging.error(f'Request failed: {err.reason}')
+    except HTTPError as err:
+        logging.error(f'Request Failed: {err.code}')
+    else:
+        return result.read()
 
 
 def download_latest_image(sat='goes-17', sector='full_disk', product='geocolor', zoom=0, output_dir=None, filename=None):
