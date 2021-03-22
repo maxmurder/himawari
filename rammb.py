@@ -10,6 +10,7 @@ import argparse
 from pathlib import Path
 
 logging.getLogger().setLevel(logging.INFO)
+logging.getLogger().propagate = False
 
 RAMMB_BASE_URL = 'https://rammb-slider.cira.colostate.edu/data/'
 TILE_WIDTH = 678
@@ -127,7 +128,10 @@ if __name__ == '__main__':
     parser.add_argument('-z', '--zoom', help='Zoom level to use. 0-4', type=int, default=0)
     parser.add_argument('-d', '--directory', help='Output directory for image.', type=str, default=None)
     parser.add_argument('-f', '--filename', help='Filename for output', type=str, default=None)
+    parser.add_argument('-q', '--quiet', action='store_true')
     args = parser.parse_args()
+
+    logging.getLogger().disabled = args.quiet
 
     download_latest_image(sat=args.sat,
                           sector=args.sector,
