@@ -13,8 +13,8 @@ himawari.py [-l --lod {4, 8, 16, 20}] [-f --format {png,jpg,bmp,tiff,pcx,ppm,im,
 -r --retires      Number of times to retry connections before aborting.
 ```
 
-#### Rammb:
-For retrieving imagery from GOES, and a variety of other satilltes, including Himiwari-8, we use the <a h ref="https://rammb-slider.cira.colostate.edu"/>Colorado State University RAMMB/CIRA slider </a>api script: 
+#### RAAMB/CIRA:
+For retrieving imagery from GOES, and a variety of other satilltes, including Himiwari-8, we use the <a href="https://rammb-slider.cira.colostate.edu"/>Colorado State University RAMMB/CIRA slider </a>api script: 
 ```
 rammb.py [-h] [-s {goes-16,goes-17,himawari,meteosat-8,meteosat-11,jpss}] [-c SECTOR] [-p PRODUCT] [-z ZOOM]
                 [-d DIRECTORY] [-f FILENAME] [-q]
