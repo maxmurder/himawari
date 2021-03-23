@@ -38,14 +38,14 @@ optional arguments:
   ##### Linux:
   1. Install scripts (to a location of your choice):
 
-    `sudo cp himawari.py /usr/local/bin/ && sudo cp rammb.py /usr/local/bin/ && sudo cp set-background.sh /usr/local/bin/`
-    `sudo chmod 755 /usr/local/bin/set-background.sh`
+    sudo cp himawari.py /usr/local/bin/ && sudo cp rammb.py /usr/local/bin/ && sudo cp set-background.sh /usr/local/bin/
+    sudo chmod 755 /usr/local/bin/set-background.sh
   2. Create cron job to run the script (satellites update every 10 mins).
 
-	`crontab -e`
+	crontab -e
   4. Add this line:
  
-  	`*/10 * * * * /usr/local/bin/set-background.sh`
+  	*/10 * * * * /usr/local/bin/set-background.sh
   ##### Windows:
   1. Add an task in the windows task scheduler to run update-backgound.bat on a repeating interval:
   
