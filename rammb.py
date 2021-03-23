@@ -120,7 +120,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-s', '--sat',
                         choices=['goes-16', 'goes-17', 'himawari', 'meteosat-8', 'meteosat-11', 'jpss'],
-                        help='Satellite to get data for.',
+                        help='Satellite to retrieve data from.',
                         type=str,
                         default='goes-16')
     parser.add_argument('-c', '--sector', help='Image sector to retrieve.', type=str, default='full_disk')
