@@ -6,7 +6,8 @@ Requires <a href="https://www.python.org/">Python 3</a> with the <a href="https:
 
 ### Usage:
 ```
-himawari.py [-l --lod {4, 8, 16, 20}] [-f --format {png,jpg,bmp,tiff,pcx,ppm,im,eps,gif,spi,webp}] [-o --output <output.png>] [-r --retires <int>]
+himawari.py [-l --lod {4, 8, 16, 20}] [-f --format {png,jpg,bmp,tiff,pcx,ppm,im,eps,gif,spi,webp}] 
+	       [-o --output <output.png>] [-r --retires <int>]
 -l --lod {4,8,16,20}      Image level of detail.
 -f --format {png,jpg,bmp,tiff,pcx,ppm,im,eps,gif,spi,webp}      Output image format.
 -o --output      Name of output file.
