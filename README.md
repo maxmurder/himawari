@@ -2,6 +2,8 @@
 
 Simple python script for retrieving the latest <a href="http://himawari8.nict.go.jp">Himawari-8</a> and <a h ref="https://rammb-slider.cira.colostate.edu"/> GOES </a>satellite imagery and applying them as a updating desktop background.
 
+Requires <a href="https://www.python.org/">Python 3</a> with the <a href="https://pypi.org/project/Pillow/">pillow</a> package. 
+
 ### Usage:
 ```
 himawari.py [-l --lod {4, 8, 16, 20}] [-f --format {png,jpg,bmp,tiff,pcx,ppm,im,eps,gif,spi,webp}] [-o --output <output.png>] [-r --retires <int>]
@@ -33,13 +35,20 @@ optional arguments:
 
 
 ### Background Automation:
-  ##### GNOME:
-  1. Install scripts:
-    `sudo cp himawari.py /usr/local/bin/ && sudo cp setBackground.sh /usr/local/bin/`
+  ##### Linux:
+  1. Install scripts (to a location of your choice):
+
+    `sudo cp himawari.py /usr/local/bin/ && sudo cp rammb.py /usr/local/bin/ && sudo cp set-background.sh /usr/local/bin/`
     `sudo chmod 755 /usr/local/bin/set-background.sh`
   2. Create cron job to run the script (satellites update every 10 mins).
+  
 	`crontab -e`
-	a. Add this line:
-    `*/10 * * * * /usr/local/bin/himawari/set-background.sh`
+   a. Add this line:
+	
+    `*/10 * * * * /usr/local/bin/set-background.sh`
+  ##### Windows:
+  1. Add an task in the windows task scheduler to run update-backgound.bat on a repeating interval:
+  	`update-backgound.bat C:\User\Urist\Pictures\Backgounds`
+  2. Set the desktop backgound mode to slideshow, and select one of the output directories as the source.
     
     
