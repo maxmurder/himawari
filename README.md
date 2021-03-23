@@ -48,6 +48,7 @@ optional arguments:
     `*/10 * * * * /usr/local/bin/set-background.sh`
   ##### Windows:
   1. Add an task in the windows task scheduler to run update-backgound.bat on a repeating interval:
+  
   	`update-backgound.bat C:\User\Urist\Pictures\Backgounds`
   2. Set the desktop backgound mode to slideshow, and select one of the output directories as the source.
     
