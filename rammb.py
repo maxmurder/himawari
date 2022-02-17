@@ -38,7 +38,7 @@ def get_latest_url(sat='goes-17', sector='full_disk', product='geocolor'):
         latest_timestamp = latest_times.get('timestamps_int')[0]
         latest_datetime = strptime(str(latest_timestamp), '%Y%m%d%H%M%S')
         logging.info(f'Latest {strftime("%Y/%m/%d %H:%M:%S", latest_datetime)}')
-        return f'{RAMMB_BASE_URL}imagery/{strftime("%Y%m%d", latest_datetime)}/{sat}---{sector}/{product}/{latest_timestamp}/', latest_datetime
+        return f'{RAMMB_BASE_URL}imagery/{strftime("%Y/%m/%d", latest_datetime)}/{sat}---{sector}/{product}/{latest_timestamp}/', latest_datetime
 
 
 def get_image_url(zoom=0, tile_x=0, tile_y=0, latest_url=None):
