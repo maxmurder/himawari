@@ -17,7 +17,7 @@ TILE_WIDTH = 678
 ZOOM_TILES = [1, 2, 4, 8, 16]
 
 
-def get_latest_url(sat='goes-17', sector='full_disk', product='geocolor'):
+def get_latest_url(sat='goes-18', sector='full_disk', product='geocolor'):
     """
     Get latest image url
     :param sat: which satellite to get images from (goes-16, goes-17, himawari, jpss)
@@ -119,7 +119,7 @@ def download_latest_image(sat='goes-17', sector='full_disk', product='geocolor',
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-s', '--sat',
-                        choices=['goes-16', 'goes-17', 'himawari', 'meteosat-8', 'meteosat-11', 'jpss'],
+                        choices=['goes-16', 'goes-18', 'himawari', 'meteosat-8', 'meteosat-11', 'jpss'],
                         help='Satellite to retrieve data from.',
                         type=str,
                         default='goes-16')
