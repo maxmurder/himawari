@@ -5,7 +5,7 @@ REM download and copy latest goes and himawari images for use in windows backgro
 REM usage:
 REM 		update-background.bat <output path>
 
-python rammb.py -s himawari -z 1 -d %1\himawari\ -f himawari.png
+python rammb.py -s himawari -z 1 -d %1\himawari\ -f himawari_01.png
 copy %1\himawari\himawari_01.png %1\himawari\himawari_02.png
 
 python rammb.py -s goes-19 -z 1 -d %1\goes-19\ -f goes-19_01.png

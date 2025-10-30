@@ -2,7 +2,8 @@
 
 Simple python script for retrieving the latest <a href="http://himawari8.nict.go.jp">Himawari-8</a> and <a h ref="https://rammb-slider.cira.colostate.edu"/> GOES </a>satellite imagery and applying them as a updating desktop background.
 
-Requires <a href="https://www.python.org/">Python 3</a> with the <a href="https://pypi.org/project/Pillow/">pillow</a> package. 
+Requires <a href="https://www.python.org/">Python 3</a> with the <a href="https://pypi.org/project/Pillow/">pillow</a> package.
+May also require local SSL certificates. if using pip use the command `pip install pip-system-certs`
 
 ### Usage:
 ```

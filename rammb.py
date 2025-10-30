@@ -9,15 +9,15 @@ from io import BytesIO
 import argparse
 from pathlib import Path
 
-logging.getLogger().setLevel(logging.INFO)
 logging.getLogger().propagate = False
 
 RAMMB_BASE_URL = 'https://rammb-slider.cira.colostate.edu/data/'
-TILE_WIDTH = 678
+TILE_WIDTH_GOES = 678
+TILE_WIDTH_HIMA = 688
 ZOOM_TILES = [1, 2, 4, 8, 16]
 
 
-def get_latest_url(sat='goes-18', sector='full_disk', product='geocolor'):
+def get_latest_url(sat='goes-19', sector='full_disk', product='geocolor'):
     """
     Get latest image url
     :param sat: which satellite to get images from (goes-16, goes-17, himawari, jpss)
@@ -55,7 +55,7 @@ def get_image_url(zoom=0, tile_x=0, tile_y=0, latest_url=None):
     return f'{latest_url}{zoom:02}/{tile_y:03}_{tile_x:03}.png'
 
 
-def get_latest_image_urls(sat='goes-17', sector='full_disk', product='geocolor', zoom=0):
+def get_latest_image_urls(sat='goes-19', sector='full_disk', product='geocolor', zoom=0):
     latest_url, latest_datetime = get_latest_url(sat=sat, sector=sector, product=product)
     urls = list()
     for tile_x in range(0, ZOOM_TILES[zoom]):
@@ -77,7 +77,7 @@ def download_image(url):
         return result.read()
 
 
-def download_latest_image(sat='goes-17', sector='full_disk', product='geocolor', zoom=0, output_dir=None, filename=None):
+def download_latest_image(sat='goes-19', sector='full_disk', product='geocolor', zoom=0, output_dir=None, filename=None):
     """
     Download latest images from https://rammb-slider.cira.colostate.edu/ api and stitch them together into a single output.
     :param sat: satellite to use for download.
@@ -90,7 +90,8 @@ def download_latest_image(sat='goes-17', sector='full_disk', product='geocolor',
     """
     zoom = min(4, zoom)
     tiles, latest_datetime = get_latest_image_urls(sat=sat, sector=sector, product=product, zoom=zoom)
-    image_width = TILE_WIDTH * ZOOM_TILES[zoom]
+    tile_width = TILE_WIDTH_HIMA if sat=='himawari' else TILE_WIDTH_GOES
+    image_width = tile_width * ZOOM_TILES[zoom]
     image = Image.new('RGB', (image_width, image_width))
     logging.debug(f'Created image: {image.size}')
     n = 0
@@ -101,10 +102,10 @@ def download_latest_image(sat='goes-17', sector='full_disk', product='geocolor',
         tile_data = download_image(tile_info.get('url'))
         if tile_data:
             tile = Image.open(BytesIO(tile_data))
-            tile_box = (TILE_WIDTH * tile_info.get('tile_x'),
-                        TILE_WIDTH * tile_info.get('tile_y'),
-                        TILE_WIDTH * (tile_info.get('tile_x') + 1),
-                        TILE_WIDTH * (tile_info.get('tile_y') + 1))
+            tile_box = (tile_width * tile_info.get('tile_x'),
+                        tile_width * tile_info.get('tile_y'),
+                        tile_width * (tile_info.get('tile_x') + 1),
+                        tile_width * (tile_info.get('tile_y') + 1))
             image.paste(tile, tile_box)
     if not filename:
         filename = strftime(f'{sat}_{sector}_{product}_%Y-%m-%d-%H%M%S.png', latest_datetime)
@@ -122,16 +123,18 @@ if __name__ == '__main__':
                         choices=['goes-19', 'goes-18', 'himawari', 'meteosat-8', 'meteosat-11', 'jpss'],
                         help='Satellite to retrieve data from.',
                         type=str,
-                        default='goes-16')
+                        default='goes-19')
     parser.add_argument('-c', '--sector', help='Image sector to retrieve.', type=str, default='full_disk')
     parser.add_argument('-p', '--product', help='Image product to retrieve.', type=str, default='geocolor')
     parser.add_argument('-z', '--zoom', help='Zoom level to use. 0-4', type=int, default=0)
     parser.add_argument('-d', '--directory', help='Output directory for image.', type=str, default=None)
     parser.add_argument('-f', '--filename', help='Filename for output', type=str, default=None)
     parser.add_argument('-q', '--quiet', action='store_true')
+    parser.add_argument('--debug', help='Enable debug logging', action='store_true')
     args = parser.parse_args()
 
     logging.getLogger().disabled = args.quiet
+    logging.getLogger().setLevel(logging.DEBUG if args.debug else logging.INFO)
 
     download_latest_image(sat=args.sat,
                           sector=args.sector,
