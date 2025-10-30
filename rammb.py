@@ -14,13 +14,14 @@ logging.getLogger().propagate = False
 RAMMB_BASE_URL = 'https://rammb-slider.cira.colostate.edu/data/'
 TILE_WIDTH_GOES = 678
 TILE_WIDTH_HIMA = 688
+TILE_WIDTH_METE = 464
 ZOOM_TILES = [1, 2, 4, 8, 16]
 
 
 def get_latest_url(sat='goes-19', sector='full_disk', product='geocolor'):
     """
     Get latest image url
-    :param sat: which satellite to get images from (goes-16, goes-17, himawari, jpss)
+    :param sat: which satellite to get images from (goes-18, goes-19, himawari, jpss)
     :param product:
     :return:
     """
@@ -90,7 +91,12 @@ def download_latest_image(sat='goes-19', sector='full_disk', product='geocolor',
     """
     zoom = min(4, zoom)
     tiles, latest_datetime = get_latest_image_urls(sat=sat, sector=sector, product=product, zoom=zoom)
-    tile_width = TILE_WIDTH_HIMA if sat=='himawari' else TILE_WIDTH_GOES
+
+    tile_width = TILE_WIDTH_GOES
+    if sat in ['himawari', 'gk2a']:
+        tile_width = TILE_WIDTH_HIMA
+    elif sat in ['meteosat-9']:
+        tile_width = TILE_WIDTH_METE
     image_width = tile_width * ZOOM_TILES[zoom]
     image = Image.new('RGB', (image_width, image_width))
     logging.debug(f'Created image: {image.size}')
@@ -120,7 +126,7 @@ def download_latest_image(sat='goes-19', sector='full_disk', product='geocolor',
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-s', '--sat',
-                        choices=['goes-19', 'goes-18', 'himawari', 'meteosat-8', 'meteosat-11', 'jpss'],
+                        choices=['goes-19', 'goes-18', 'himawari', 'meteosat-9', 'gk2a'],
                         help='Satellite to retrieve data from.',
                         type=str,
                         default='goes-19')
